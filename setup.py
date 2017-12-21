@@ -9,6 +9,10 @@ setup(name='Library',
       license='MIT',
       packages=['library'],
       install_requires=[
-          '',
+          'PyQt5',
       ],
+    classifiers=[
+        'Programming Language :: Python :: 3',
+    ],
+      entry_points={'console_scripts': ['libraryman = library.core:main']},
       zip_safe=False)
