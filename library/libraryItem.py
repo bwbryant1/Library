@@ -8,7 +8,7 @@
 class libraryItem(object):
 	id = '404'
 	
-	def __repr(self):
+	def __repr__(self):
 		return '<id: %s>' % self.id
 	
 	def __init__(self,id,name,description):
