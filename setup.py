@@ -9,6 +9,6 @@ setup(name='Library',
       license='MIT',
       packages=['library'],
       install_requires=[
-          'sqlite3',
+          '',
       ],
       zip_safe=False)
