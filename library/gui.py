@@ -1,7 +1,7 @@
 import sys
 import pkg_resources
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, qApp, QHBoxLayout, QMainWindow, QAction
+from PyQt5.QtWidgets import QApplication, qApp, QHBoxLayout, QMainWindow, QAction, QMessageBox
 from PyQt5.QtGui import QIcon
 
 class MainWindow(QMainWindow):
@@ -28,7 +28,7 @@ class MainWindow(QMainWindow):
         self.saveAct.setShortcut('Ctrl+s')
         self.saveAct.setStatusTip('Save Library')
 
-        self.openAct = QAction(QIcon(self.getFileResource('folder.svg','icon')),'&Open Library', self)
+        self.openAct = QAction(QIcon(self.getFileResource('gear.svg','icon')),'&Open Library', self)
         self.openAct.setShortcut('Ctrl+o')
         self.openAct.setStatusTip('Open Library')
 
@@ -36,6 +36,10 @@ class MainWindow(QMainWindow):
         self.exitAct.setShortcut('Ctrl+Q')
         self.exitAct.setStatusTip('Exit application')
         self.exitAct.triggered.connect(qApp.quit)
+
+        self.aboutAct = QAction("&About", self,
+        statusTip="Show the application's About box",
+        triggered=self.about)
 
     def createMenuBar(self):
         menu = self.menuBar()
@@ -58,7 +62,7 @@ class MainWindow(QMainWindow):
         viewMenu.addAction('Go Fullscreen')
         
         aboutMenu = menu.addMenu('About')
-        aboutMenu.addAction('About Library Manager...')
+        aboutMenu.addAction(self.aboutAct)
 
     def createToolBar(self):
         self.toolbar = self.addToolBar("Toolbar")
@@ -68,6 +72,11 @@ class MainWindow(QMainWindow):
     
     def setStatusBar(self,msg):
         self.statusBar().showMessage(str(msg))
+
+    def about(self):
+        QMessageBox.about(self, "About Library Manager",
+                "The <b>Library Manger</b> app was made for CYEN 481"
+                "<br>Its Authors are: Brandon Bryant, Caroline Fontenot, and Sai Spurthy")
 
 def launch():
     app = QApplication(sys.argv)
