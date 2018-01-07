@@ -17,12 +17,12 @@ Install Instructions:
 8) libraryman 
 
 Develop Install Instructions:
-1-6) *Same as before*
-  7) python3 setup.py develop
-  8) libraryman *And then close application when done*
-  9) *make some feature change*
- 10) libraryman *application will now run, reflecting the changes you made to source code*
- 11) *when satified with the change, overwrite the changed file to the ./Library/ dir outside of ./libraryDev *
+  1) *Same as 1-6 before*
+  2) python3 setup.py develop
+  3) libraryman *And then close application when done*
+  4) *make some feature change*
+  5) libraryman *application will now run, reflecting the changes you made to source code*
+  6) *when satified with the change, overwrite the changed file to the ./Library/ dir outside of ./libraryDev *
 
 
 When done with development:
