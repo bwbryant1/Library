@@ -24,29 +24,33 @@ def new_library():
 		print("Could not make new library at: %s" % libFunc['fileDir'])
 
 def load_library():
-	clearTerm()
-	running = True
-	if DEBUG:
-		print("load_library\n")
-	fileDir = input("Where is the library?: ")
-	print("Checking file at %s" % fileDir)
-	if os.path.isfile(fileDir):
-		print("Library Exists. Loading library.")
-		while running:
-			print(
-				"Using library {lib}. \n" 
-				" 1) List Books \n"
-				" 2) Add Book \n"
-				" 3) Delete Book \n"
-				" 4) Add book to Reading list \n"
-				" 5) Update book \n"
-				"10) Close library"
-				"".format(lib=fileDir)) 
-			choice = input("What do you want to do?: ")
-			if choice == '10':
-				running = False
-	else:
-		print("We did not find a library there. Sorry")
+    clearTerm()
+    running = True
+    if DEBUG:
+        print("load_library\n")
+    fileDir = input("Where is the library?: ")
+    print("Checking file at %s" % fileDir)
+    if os.path.isfile(fileDir):
+        print("Library Exists. Loading library.")
+        while running:
+            print(
+                "Using library {lib}. \n" 
+                " 1) List Books \n"
+                " 2) Add Book \n"
+                " 3) Delete Book \n"
+                " 4) Add book to Reading list \n"
+                " 5) Update book \n"
+                "10) Close library"
+                "".format(lib=fileDir)) 
+            choice = input("What do you want to do?: ")
+            if choice == '10':
+                running = False
+            elif choice == '2':
+                print("Adding book")
+                nameOfBook = input("What is the name of the book?: ")
+                dbFuncs.addBookToLibrary(fileDir,nameOfBook)
+    else:
+        print("We did not find a library there. Sorry")
 	
 def get_library_details():
 	if DEBUG:
