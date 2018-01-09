@@ -7,8 +7,6 @@ from . import dbFuncs
 
 DEBUG = True
 
-currLibrary = ''
-
 def clearTerm():
 	os.system("clear")
 
@@ -18,7 +16,13 @@ def new_library():
 	clearTerm()
 	dbName = input('What do you want to call your Library?: ')
 	location = input('Where do you want to store your Library?: ')	
-	dbFuncs.makeNewLibrary(dbName,location)
+	libFunc = dbFuncs.makeNewLibrary(dbName,location)
+	if libFunc['status']:
+		print("made library at: %s" % libFunc['fileDir'] )
+		pass
+	else:
+		print("Could not make new library at: %s" % libFunc['fileDir'])
+
 def load_library():
 	if DEBUG:
 		print("load_library\n")
@@ -29,14 +33,19 @@ def search_for_databases():
 	if DEBUG:
 		print("search_for_databases\n")
 
-
 def main():
 	running = True
 	os.system("clear")
 	print("Libraryman running. Welcome.\n")
 	while running:
-		print("Supported Functions are:\n 1) Make a new Library\n 2) Load a Library from memory\n 3) Get Library details\n 4) Search for Databases")
-		print("10) Exit")
+		print(
+			"Supported Functions are: \n"
+			" 1) Make a new Library \n"
+			" 2) Load a Library from file \n"
+			" 3) Get Library details \n"
+			" 4) Search for Databases \n"
+			"10) Exit \n")
+
 		choice = input("What would you like to do?: ")
 		if choice == '1':
 			print("Making Library")
@@ -56,7 +65,6 @@ def main():
 		else:
 			print("I'm sorry I don't know that command.\n")
 
-		
 # wow very main
 if __name__ == "__main__":
 	sys.exit(main())

@@ -12,15 +12,23 @@ def makeConnection(DATABASE_LOCATION):
 def makeNewLibrary(nameOf,locationOf):
 	library_name = nameOf
 	library_location = locationOf
+	return_status = {'status':True,'libDir':'','fileDir':''}
+
 	#method does use user inputted location yet	
-	cwd = os.getcwd()
-	
+	if locationOf == '':
+		directory = os.getcwd()
+	else:
+		directory = locationOf
+	return_status['libDir'] = directory
+	return_status['fileDir'] = directory + "/" + nameOf + ".db"
 	try:
-		connection = makeConnection(cwd + "/" + nameOf + ".db")
+		connection = makeConnection(directory + "/" + nameOf + ".db")
 		cur = connection[0]
 		con = connection[1]
 	except sqlite3.Error as e:
 		print(e)
+		return_status['status'] = False
+		return return_status
 	
 	cur.execute('DROP TABLE IF EXISTS BOOKS')
 	cur.execute(''
@@ -38,6 +46,6 @@ def makeNewLibrary(nameOf,locationOf):
 
 	con.commit()
 	con.close()
-	
+	return return_status
 
 	
