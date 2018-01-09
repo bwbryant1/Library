@@ -2,15 +2,23 @@
 # coding: utf-8
 
 import sys,os
-from library import libraryItem as item
+from . import libraryItem as item
+from . import dbFuncs
 
 DEBUG = True
 
 currLibrary = ''
 
+def clearTerm():
+	os.system("clear")
+
 def new_library():
 	if DEBUG:
 		print("new_library\n")
+	clearTerm()
+	dbName = input('What do you want to call your Library?: ')
+	location = input('Where do you want to store your Library?: ')	
+	dbFuncs.makeNewLibrary(dbName,location)
 def load_library():
 	if DEBUG:
 		print("load_library\n")

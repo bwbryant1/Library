@@ -2,7 +2,7 @@
 # coding: utf-8
 
 import sys
-from library import libraryItem as item
+from . import libraryItem as item
 from . import gui
 
 def main():

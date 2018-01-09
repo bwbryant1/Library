@@ -15,5 +15,5 @@ setup(name='Library',
           'Programming Language :: Python :: 3',
       ],
       package_data = {'library':['icons/*svg']},
-      entry_points={'console_scripts': ['libraryman = library.core:main']},
+      entry_points={'console_scripts': ['libraryman = library.core:main','libraryman-cli = library.cli:main']},
       zip_safe=False)
