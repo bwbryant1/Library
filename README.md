@@ -12,7 +12,7 @@ Install Instructions:
 3) virtualenv -p python libraryDev #this makes a virtual environment to test out software, without installing all the dependencies on your computer
 4) cp -R Library/ libraryDev/ #Make a development copy of the module
 5) cd libraryDev/
-6) source bin/active #This activates the virtual environment. It has its own python3 local installation that you can destroy and mess things up with
+6) source bin/activate #This activates the virtual environment. It has its own python3 local installation that you can destroy and mess things up with
 7) python3 setup.py install
 8) libraryman 
 
