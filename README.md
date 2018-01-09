@@ -13,11 +13,12 @@ Install Instructions:
 4) cp -R Library/ libraryDev/ #Make a development copy of the module
 5) cd libraryDev/
 6) source bin/activate #This activates the virtual environment. It has its own python3 local installation that you can destroy and mess things up with
-7) python3 setup.py install
-8) libraryman 
+7) pip3 install pyqt5
+8) python3 setup.py install
+9) libraryman 
 
 Develop Install Instructions:
-  1) *Same as 1-6 before*
+  1) *Same as 1-7 before*
   2) python3 setup.py develop
   3) libraryman *And then close application when done*
   4) *make some feature change*
