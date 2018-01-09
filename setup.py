@@ -9,10 +9,11 @@ setup(name='Library',
       license='MIT',
       packages=['library'],
       install_requires=[
-          'PyQt5',
+          'pyqt5',
       ],
       classifiers=[
           'Programming Language :: Python :: 3',
       ],
+      package_data = {'library':['icons/*svg']},
       entry_points={'console_scripts': ['libraryman = library.core:main']},
       zip_safe=False)
