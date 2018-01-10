@@ -40,6 +40,7 @@ def load_library():
                 " 3) Delete Book \n"
                 " 4) Add book to Reading list \n"
                 " 5) Update book \n"
+                " 6) Find Book \n"
                 "10) Close library"
                 "".format(lib=fileDir)) 
             choice = input("What do you want to do?: ")
@@ -49,6 +50,11 @@ def load_library():
                 print("Adding book")
                 nameOfBook = input("What is the name of the book?: ")
                 dbFuncs.addBookToLibrary(fileDir,nameOfBook)
+            elif choice == '6':
+            	print("Find a book")
+            	nameOfBook = input("What is the name of the book you would like to find?: ")
+            	dbFuncs.searchLibrary(fileDir, nameOfBook) 
+            	
     else:
         print("We did not find a library there. Sorry")
 	
