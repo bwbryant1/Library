@@ -128,7 +128,7 @@ def makeNewLibrary(nameOf,locationOf):
         print(e)
         return_status['status'] = False
         return return_status
-	
+        
     cur.execute('DROP TABLE IF EXISTS BOOKS')
     cur.execute(''
         'CREATE TABLE BOOKS ('
@@ -146,5 +146,30 @@ def makeNewLibrary(nameOf,locationOf):
     con.commit()
     con.close()
     return return_status
+        
+def searchLibrary(libDir, title):
+	return_status = {'status':True,'msg':""}
+
+	try:
+		connection = makeConnection(libDir)
+		cur = connection[0]
+		con = connection[1]
+	except sqlite3.Error as e:
+		print(e)
+		return_status['status'] = False
+		return return_status
+		
+	bookExists = checkBookExists(libDir,title)['status']
+	
+	if bookExists:
+		return_status['msg'] = "This is your book: " + title
+		return return_status
+	else:
+		return_status['status'] = False
+		return_status['msg'] = "This book cannot be found."
+		return return_status
+		
+	
+
 
 	
