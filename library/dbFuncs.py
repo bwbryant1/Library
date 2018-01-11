@@ -234,3 +234,21 @@ def addBookToReadingList(libDir,title):
         return_status['status'] = False
         return_status['msg'] = "Failed to add book to reading list. Book !Exist?"
         return return_status
+
+def sortLibrary(libDir,sortBy):
+    return_status = {'status':True,'msg':""}
+
+    try:
+        connection = makeConnection(libDir)
+        cur = connection[0]
+        con = connection[1]
+    except sqlite3.Error as e:
+        print(e)
+        return_status['status'] = False
+        return return_status
+
+    cur.execute("SELECT TITLE FROM BOOKS GROUP BY {COLUMN} ORDER BY TITLE".format(COLUMN=sortBy))
+    sortedListTuple = cur.fetchall()
+    sortedList = [x[0] for x in sortedListTuple]
+    return_status['sortedList'] = sortedList
+    return return_status
