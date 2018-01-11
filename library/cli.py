@@ -43,6 +43,7 @@ def load_library():
                 " 5) View Reading list \n"
                 " 6) Update book \n"
                 " 7) Find Book \n"
+                " 8) Sort Library \n"
                 "10) Close library"
                 "".format(lib=fileDir)) 
             choice = input("What do you want to do?: ")
@@ -78,6 +79,13 @@ def load_library():
                 print("Find a book")
                 nameOfBook = input("What is the name of the book you would like to find?: ")
                 print(dbFuncs.searchLibrary(fileDir, nameOfBook)['msg'])
+            elif choice == '8':
+                clearTerm()
+                sortBy = 'title'
+                sortedList = dbFuncs.sortLibrary(fileDir,sortBy)['sortedList']
+                for _book in sortedList:
+                    print(_book)
+                print("=====End of Sorted List=====")
             else:
                 print("Selection not recognized")
     else:
