@@ -103,7 +103,7 @@ def checkBookExists(libDir,title):
         else:
             raise Exception('No book found')
             return_status['msg'] = "Book exists in library"
-            return return_status
+        return return_status
     except:
         return_status['status'] = False
         return_status['msg'] = "Book does not exist in library"
@@ -181,3 +181,8 @@ def listBooksInLibrary(libDir):
         return_status['status'] = False
         return return_status
 
+    cur.execute("SELECT TITLE FROM BOOKS")
+    bookListTuple = cur.fetchall()
+    bookList = [x[0] for x in bookListTuple]
+    return_status['bookList'] = bookList
+    return return_status

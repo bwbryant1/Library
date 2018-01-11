@@ -2,7 +2,6 @@
 # coding: utf-8
 
 import sys,os
-from . import libraryItem as item
 from . import dbFuncs
 
 DEBUG = True
@@ -45,16 +44,26 @@ def load_library():
                 "".format(lib=fileDir)) 
             choice = input("What do you want to do?: ")
             if choice == '10':
+                clearTerm()
                 running = False
+            elif choice == '1':
+                clearTerm()
+                print("========BOOKS========")
+                bookList = dbFuncs.listBooksInLibrary(fileDir)['bookList']
+                for _book in bookList:
+                    print(_book)
+                print("========END OF BOOKS========")
+
             elif choice == '2':
                 print("Adding book")
                 nameOfBook = input("What is the name of the book?: ")
                 dbFuncs.addBookToLibrary(fileDir,nameOfBook)
             elif choice == '6':
-            	print("Find a book")
-            	nameOfBook = input("What is the name of the book you would like to find?: ")
-            	print(dbFuncs.searchLibrary(fileDir, nameOfBook)['msg'])
-            	
+                print("Find a book")
+                nameOfBook = input("What is the name of the book you would like to find?: ")
+                print(dbFuncs.searchLibrary(fileDir, nameOfBook)['msg'])
+            else:
+                print("Selection not recognized")
     else:
         print("We did not find a library there. Sorry")
 
@@ -91,6 +100,7 @@ def main():
             print("Searching for Databases")
             search_for_databases()
         elif choice == '10':
+            clearTerm()
             print("Exiting now.")
             sys.exit(0)
         else:
