@@ -140,7 +140,8 @@ def makeNewLibrary(nameOf,locationOf):
         'picture BLOB,'
         'lastPageRead,'
         'genre TEXT,'
-        'format TEXT'
+        'format TEXT,'
+        'isReading TEXT'
         ')')
 
     con.commit()
@@ -186,3 +187,50 @@ def listBooksInLibrary(libDir):
     bookList = [x[0] for x in bookListTuple]
     return_status['bookList'] = bookList
     return return_status
+
+def listReadingList(libDir):
+    return_status = {'status':True,'msg':""}
+
+    try:
+        connection = makeConnection(libDir)
+        cur = connection[0]
+        con = connection[1]
+    except sqlite3.Error as e:
+        print(e)
+        return_status['status'] = False
+        return return_status
+
+    cur.execute("SELECT TITLE FROM BOOKS WHERE isReading = 'True' ")
+    bookListTuple = cur.fetchall()
+    readingList = [x[0] for x in bookListTuple]
+    return_status['readingList'] = readingList
+    return return_status
+
+def addBookToReadingList(libDir,title):
+    return_status = {'status':True,'msg':""}
+
+    try:
+        connection = makeConnection(libDir)
+        cur = connection[0]
+        con = connection[1]
+    except sqlite3.Error as e:
+        print(e)
+        return_status['status'] = False
+        return return_status
+
+    bookExists = checkBookExists(libDir,title)['status']
+    if bookExists:
+        try:
+            cur.execute("UPDATE BOOKS SET isReading = 'True' WHERE TITLE = '{TITLE}' ".format(TITLE=title))
+            con.commit()
+            con.close()
+        except:
+            return_status['status'] = False
+            return_status['msg'] = "Failed to add book to reading list. Could not update reading list."
+            return return_status
+        return_status['msg'] = "Added book to reading list"
+        return return_status
+    else:
+        return_status['status'] = False
+        return_status['msg'] = "Failed to add book to reading list. Book !Exist?"
+        return return_status

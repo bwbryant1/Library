@@ -14,6 +14,8 @@ def new_library():
     if DEBUG:
         print("new_library\n")
     dbName = input('What do you want to call your Library?: ')
+    while(not dbName):
+        dbName = input("Library name cannot be blank. What do you want to call your Library?: " )
     location = input('Where do you want to store your Library?: ')	
     libFunc = dbFuncs.makeNewLibrary(dbName,location)
     if libFunc['status']:
@@ -38,8 +40,9 @@ def load_library():
                 " 2) Add Book \n"
                 " 3) Delete Book \n"
                 " 4) Add book to Reading list \n"
-                " 5) Update book \n"
-                " 6) Find Book \n"
+                " 5) View Reading list \n"
+                " 6) Update book \n"
+                " 7) Find Book \n"
                 "10) Close library"
                 "".format(lib=fileDir)) 
             choice = input("What do you want to do?: ")
@@ -53,11 +56,24 @@ def load_library():
                 for _book in bookList:
                     print(_book)
                 print("========END OF BOOKS========")
-
             elif choice == '2':
                 print("Adding book")
                 nameOfBook = input("What is the name of the book?: ")
+                while(not nameOfBook):
+                    nameOfBook = input("Name of book cannot be blank! Try again: ")
                 dbFuncs.addBookToLibrary(fileDir,nameOfBook)
+            elif choice == '4':
+                nameOfBook = input("What is the name of the book you would like to add to your reading list?: ")
+                while(not nameOfBook):
+                    nameOfBook = input("Book name cannot be blank. Try again: ")
+                print(dbFuncs.addBookToReadingList(fileDir,nameOfBook)['msg'])
+            elif choice == '5':
+                clearTerm()
+                print("=====Reading List=====")
+                readingList = dbFuncs.listReadingList(fileDir)['readingList']
+                for _book in readingList:
+                    print(_book)
+                print("=====End of List=====")
             elif choice == '6':
                 print("Find a book")
                 nameOfBook = input("What is the name of the book you would like to find?: ")
