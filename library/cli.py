@@ -53,7 +53,7 @@ def load_library():
             elif choice == '6':
             	print("Find a book")
             	nameOfBook = input("What is the name of the book you would like to find?: ")
-            	dbFuncs.searchLibrary(fileDir, nameOfBook) 
+            	print(dbFuncs.searchLibrary(fileDir, nameOfBook)['msg'])
             	
     else:
         print("We did not find a library there. Sorry")
@@ -91,7 +91,7 @@ def main():
 			print("Searching for Databases")
 			search_for_databases()
 		elif choice == '10':
-			print("Exitting now.")
+			print("Exiting now.")
 			sys.exit(0)
 		else:
 			print("I'm sorry I don't know that command.\n")
