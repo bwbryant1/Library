@@ -151,24 +151,31 @@ def makeNewLibrary(nameOf,locationOf):
 def searchLibrary(libDir, title):
     return_status = {'status':True,'msg':""}
 
-    try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
-    except sqlite3.Error as e:
-        print(e)
-        return_status['status'] = False
-        return return_status
-
-    bookExists = checkBookExists(libDir,title)['status']
-
-    if bookExists:
-        return_status['msg'] = "This is your book: " + title
-        return return_status
-    else:
-        return_status['status'] = False
-        return_status['msg'] = "This book cannot be found."
-        return return_status
+	try:
+		connection = makeConnection(libDir)
+		cur = connection[0]
+		con = connection[1]
+	except sqlite3.Error as e:
+		print(e)
+		return_status['status'] = False
+		return return_status
+	  
+	try:  
+		cur.execute("SELECT TITLE FROM books WHERE title LIKE '%{NAME}%'".format(NAME = title))
+		bookListTuple = cur.fetchall()
+		bookList = [x[0] for x in bookListTuple]
+		if bookList:
+			return_status['bookList'] = bookList
+			return_status['msg'] = "These are the books that match this title."
+			return return_status
+		else:
+			return_status['status'] = False
+			return_status['msg'] = "No books in library match that title."
+			return return_status
+	except:
+		return_status['status'] = False
+		return_status['msg'] = "No books in library match that title."
+		return return_status
 
 def listBooksInLibrary(libDir):
     return_status = {'status':True,'msg':""}
