@@ -75,10 +75,16 @@ def load_library():
                 for _book in readingList:
                     print(_book)
                 print("=====End of List=====")
-            elif choice == '6':
+            elif choice == '7':
                 print("Find a book")
                 nameOfBook = input("What is the name of the book you would like to find?: ")
-                print(dbFuncs.searchLibrary(fileDir, nameOfBook)['msg'])
+                if(dbFuncs.searchLibrary(fileDir, nameOfBook)['status']):
+                	print(dbFuncs.searchLibrary(fileDir, nameOfBook)['msg'])
+                	matches = dbFuncs.searchLibrary(fileDir, nameOfBook)['bookList']
+                	for _book in matches:
+                		print(_book)
+                else:
+                	print(dbFuncs.searchLibrary(fileDir, nameOfBook)['msg'])
             elif choice == '8':
                 clearTerm()
                 sortBy = 'title'
