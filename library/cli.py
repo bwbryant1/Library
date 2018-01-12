@@ -90,6 +90,7 @@ def load_library():
                 clearTerm()
                 sortBy = 'title'
                 sortedList = dbFuncs.sortLibrary(fileDir,sortBy)['sortedList']
+                print("===== Sorted List=====")
                 for _book in sortedList:
                     print(_book)
                 print("=====End of Sorted List=====")
