@@ -141,7 +141,8 @@ def makeNewLibrary(nameOf,locationOf):
         'lastPageRead,'
         'genre TEXT,'
         'format TEXT,'
-        'isReading TEXT'
+        'isReading TEXT,'
+        'wantToRead TEXT'
         ')')
 
     con.commit()
@@ -159,7 +160,7 @@ def searchLibrary(libDir, title):
         print(e)
         return_status['status'] = False
         return return_status
-	  
+      
     try:  
         cur.execute("SELECT TITLE FROM books WHERE title LIKE '%{NAME}%'".format(NAME = title))
         bookListTuple = cur.fetchall()
@@ -258,4 +259,51 @@ def sortLibrary(libDir,sortBy):
     sortedListTuple = cur.fetchall()
     sortedList = [x[0] for x in sortedListTuple]
     return_status['sortedList'] = sortedList
+    return return_status
+
+def addToRead(libDir, title):
+    return_status = {'status':True,'msg':""}
+
+    try:
+        connection = makeConnection(libDir)
+        cur = connection[0]
+        con = connection[1]
+    except sqlite3.Error as e:
+        print(e)
+        return_status['status'] = False
+        return return_status
+    
+    bookExists = checkBookExists(libDir,title)['status']
+    if bookExists:
+        try:
+            cur.execute("UPDATE BOOKS SET wantToRead = 'True' WHERE TITLE = '{TITLE}' ".format(TITLE=title))
+            con.commit()
+            con.close()
+        except:
+            return_status['status'] = False
+            return_status['msg'] = "Failed to add book to Want to Read list. Could not update list."
+            return return_status
+        return_status['msg'] = "Added book to Want To Read list"
+        return return_status
+    else:
+        return_status['status'] = False
+        return_status['msg'] = "Failed to add book to Want To Read list. Book !Exist?"
+        return return_status
+
+def listToRead(libDir):
+    return_status = {'status':True,'msg':""}
+
+    try:
+        connection = makeConnection(libDir)
+        cur = connection[0]
+        con = connection[1]
+    except sqlite3.Error as e:
+        print(e)
+        return_status['status'] = False
+        return return_status
+
+    cur.execute("SELECT TITLE FROM BOOKS WHERE wantToRead = 'True' ")
+    bookListTuple = cur.fetchall()
+    toReadList = [x[0] for x in bookListTuple]
+    return_status['wantToReadList'] = toReadList
     return return_status
