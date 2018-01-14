@@ -16,7 +16,7 @@ def new_library():
     dbName = input('What do you want to call your Library?: ')
     while(not dbName):
         dbName = input("Library name cannot be blank. What do you want to call your Library?: " )
-    location = input('Where do you want to store your Library?: ')	
+    location = input('Where do you want to store your Library?: ')  
     libFunc = dbFuncs.makeNewLibrary(dbName,location)
     if libFunc['status']:
         print("made library at: %s" % libFunc['fileDir'] )
@@ -44,7 +44,9 @@ def load_library():
                 " 6) Update book \n"
                 " 7) Find Book \n"
                 " 8) Sort Library \n"
-                "10) Close library"
+                " 9) Add book to Want To Read list \n"
+                "10) Close library \n"
+                "11) List Want To Read list \n"
                 "".format(lib=fileDir)) 
             choice = input("What do you want to do?: ")
             if choice == '10':
@@ -80,12 +82,12 @@ def load_library():
                 nameOfBook = input("What is the name of the book you would like to find?: ")
                 results = dbFuncs.searchLibrary(fileDir, nameOfBook)
                 if(results['status']):
-                	print(results['msg'])
-                	matches = results['bookList']
-                	for _book in matches:
-                		print(_book)
+                    print(results['msg'])
+                    matches = results['bookList']
+                    for _book in matches:
+                        print(_book)
                 else:
-                	print(results['msg'])
+                    print(results['msg'])
             elif choice == '8':
                 clearTerm()
                 sortBy = 'title'
@@ -94,6 +96,18 @@ def load_library():
                 for _book in sortedList:
                     print(_book)
                 print("=====End of Sorted List=====")
+            elif choice == '9':
+                nameOfBook = input("What is the name of the book you would like to add to your Want To Read list?: ")
+                while(not nameOfBook):
+                    nameOfBook = input("Book name cannot be blank. Try again: ")
+                print(dbFuncs.addToRead(fileDir,nameOfBook)['msg'])
+            elif choice == '11':
+                clearTerm()
+                print("=====Want To Read List=====")
+                toReadList = dbFuncs.listToRead(fileDir)['wantToReadList']
+                for _book in toReadList:
+                    print(_book)
+                print("=====End of List=====")
             else:
                 print("Selection not recognized")
     else:
