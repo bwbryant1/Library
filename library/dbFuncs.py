@@ -26,7 +26,7 @@ def addBookToLibrary(libDir,nameOf):
     con.commit()
     con.close()
 
-def addInfoToBook(libDir,column,title,info):
+def addInfoToBook(libDir,column,title,bookId,info):
     # E.g.) dbFuncs.addInfoToBook('/home/brandon/Documents/dev/Library/test.db','genre','Harry Potter','kids')
     return_status = {'status':True,'msg':""}
 
@@ -38,14 +38,12 @@ def addInfoToBook(libDir,column,title,info):
         print(e)
         return_status['status'] = False
         return_status['msg'] = "Could not make connection to that database"
-    return return_status
-
-    bookExists = checkBookExists(libDir,title)['status']
+        return return_status
     columnExists = checkColumnExists(libDir,column)['status']
 
-    if bookExists and columnExists:
+    if columnExists:
         try:
-            cur.execute("UPDATE BOOKS SET {COLUMN} = '{INFO}' WHERE TITLE = '{TITLE}' ".format(COLUMN=column,INFO=info,TITLE=title))
+            cur.execute("UPDATE BOOKS SET {COLUMN} = '{INFO}' WHERE ID = {ID} ".format(COLUMN=column,INFO=info,ID=bookId))
         except:
             return_status['status'] = False
             return_status['msg'] = "Book %s not updated" % title
@@ -260,6 +258,29 @@ def sortLibrary(libDir,sortBy):
     sortedList = [x[0] for x in sortedListTuple]
     return_status['sortedList'] = sortedList
     return return_status
+
+def getBookId(libDir,title):
+    #E.g.) dbFuncs.checkBookExists('/home/brandon/Documents/dev/Library/test.db','Harry Potter')
+    return_status = {'status':True,'msg':""}
+
+    try:
+        connection = makeConnection(libDir)
+        cur = connection[0]
+        con = connection[1]
+    except sqlite3.Error as e:
+        print(e)
+        return_status['status'] = False
+        return return_status
+    try:
+        cur.execute("SELECT ID FROM BOOKS WHERE TITLE = '{TITLE}' ".format(TITLE=title))
+        bookIdTuple = cur.fetchone()
+        bookId = bookIdTuple[0]
+        return_status['bookId']= bookId
+        return_status['msg'] = 'Book Found!'
+        return return_status
+    except:
+        return_status['msg'] = 'Sorry Book not found'
+        return return_status
 
 def addToRead(libDir, title):
     return_status = {'status':True,'msg':""}
