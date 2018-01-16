@@ -77,6 +77,16 @@ def load_library():
                 for _book in readingList:
                     print(_book)
                 print("=====End of List=====")
+            elif choice == '6':
+                clearTerm()
+                title = input("What is the title of the book you would like to update?:")
+                if(dbFuncs.checkBookExists(fileDir,title)['status']):
+                    bookId = dbFuncs.getBookId(fileDir, title)['bookId']
+                    column = 'author'
+                    info = input("What is the name of the author?:")
+                    print(dbFuncs.addInfoToBook(fileDir,column,title,bookId,info)['msg'])
+                else:
+                    print("Sorry Book %s not found" % title)
             elif choice == '7':
                 print("Find a book")
                 nameOfBook = input("What is the name of the book you would like to find?: ")
