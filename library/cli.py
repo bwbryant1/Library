@@ -82,8 +82,18 @@ def load_library():
                 title = input("What is the title of the book you would like to update?:")
                 if(dbFuncs.checkBookExists(fileDir,title)['status']):
                     bookId = dbFuncs.getBookId(fileDir, title)['bookId']
-                    column = 'author'
-                    info = input("What is the name of the author?:")
+                    print(
+                        " 1) Update Author \n"
+                        " 2) Update Genre \n"
+                        " 3) Update Format \n")
+                    columnNum = input("Which feature would you like to update?")
+                    if columnNum == '1':
+                        column = 'author'
+                    elif columnNum == '2':
+                        column = 'genre'
+                    elif columnNum == '3':
+                        column = 'genre'
+                    info = input("Please provide the info for the %s column:" % column)
                     print(dbFuncs.addInfoToBook(fileDir,column,title,bookId,info)['msg'])
                 else:
                     print("Sorry Book %s not found" % title)
