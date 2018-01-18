@@ -4,19 +4,14 @@ import os
 def makeConnection(DATABASE_LOCATION):
     con = sqlite3.connect(DATABASE_LOCATION)
     cur = con.cursor()
-    return_this = []
-    return_this.append(cur)
-    return_this.append(con)
-    return return_this
+    return (con,cur)
 
-def addBookToLibrary(libDir,nameOf):
+def addBookToLibrary(libPath,nameOf):
     title = nameOf
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
@@ -26,20 +21,18 @@ def addBookToLibrary(libDir,nameOf):
     con.commit()
     con.close()
 
-def addInfoToBook(libDir,column,title,bookId,info):
+def addInfoToBook(libPath,column,title,bookId,info):
     # E.g.) dbFuncs.addInfoToBook('/home/brandon/Documents/dev/Library/test.db','genre','Harry Potter','kids')
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
         return_status['msg'] = "Could not make connection to that database"
         return return_status
-    columnExists = checkColumnExists(libDir,column)['status']
+    columnExists = checkColumnExists(libPath,column)['status']
 
     if columnExists:
         try:
@@ -58,14 +51,12 @@ def addInfoToBook(libDir,column,title,bookId,info):
     con.close()
     return return_status
 
-def checkColumnExists(libDir,columnName):
+def checkColumnExists(libPath,columnName):
     #E.g.) dbFuncs.checkColumnExists('/home/brandon/Documents/dev/Library/test.db','games')
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
@@ -81,14 +72,12 @@ def checkColumnExists(libDir,columnName):
         return_status['msg'] = "Column does not exist in that database"
         return return_status
 
-def checkBookExists(libDir,title):
+def checkBookExists(libPath,title):
     #E.g.) dbFuncs.checkBookExists('/home/brandon/Documents/dev/Library/test.db','Harry Potter')
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
@@ -110,18 +99,16 @@ def checkBookExists(libDir,title):
 def makeNewLibrary(nameOf,locationOf):
     library_name = nameOf
     library_location = locationOf
-    return_status = {'status':True,'libDir':'','fileDir':'','msg':""}
+    return_status = {'status':True,'libDir':'','libPath':'','msg':""}
 
     if locationOf == '':
         directory = os.getcwd()
     else:
         directory = locationOf
-    return_status['libDir'] = directory
-    return_status['fileDir'] = directory + "/" + nameOf + ".db"
+    return_status['libDir'] = directory #This is the library Directory
+    return_status['libPath'] = directory + "/" + nameOf + ".db" #This is the explicit library path
     try:
-        connection = makeConnection(directory + "/" + nameOf + ".db")
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(directory + "/" + nameOf + ".db")
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
@@ -140,20 +127,19 @@ def makeNewLibrary(nameOf,locationOf):
         'genre TEXT,'
         'format TEXT,'
         'isReading TEXT,'
-        'wantToRead TEXT'
+        'wantToRead TEXT,'
+        'bookmark INTEGER'
         ')')
 
     con.commit()
     con.close()
     return return_status
         
-def searchLibrary(libDir, title):
+def searchLibrary(libPath, title):
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
@@ -176,31 +162,30 @@ def searchLibrary(libDir, title):
         return_status['msg'] = "No books in library match that title."
         return return_status
 
-def listBooksInLibrary(libDir):
+def listBooksInLibrary(libPath):
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
         return return_status
 
-    cur.execute("SELECT TITLE FROM BOOKS")
+    cur.execute("SELECT TITLE,BOOKMARK FROM BOOKS")
     bookListTuple = cur.fetchall()
-    bookList = [x[0] for x in bookListTuple]
+    bookList = [x for (x,y) in bookListTuple]
+    bookmarkList = [y for (x,y) in bookListTuple]
+    return_status['bookmarkList'] = bookmarkList
     return_status['bookList'] = bookList
+    return_status['bookListTuple'] = bookListTuple
     return return_status
 
-def listReadingList(libDir):
+def listReadingList(libPath):
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
@@ -212,19 +197,17 @@ def listReadingList(libDir):
     return_status['readingList'] = readingList
     return return_status
 
-def addBookToReadingList(libDir,title):
+def addBookToReadingList(libPath,title):
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
         return return_status
 
-    bookExists = checkBookExists(libDir,title)['status']
+    bookExists = checkBookExists(libPath,title)['status']
     if bookExists:
         try:
             cur.execute("UPDATE BOOKS SET isReading = 'True' WHERE TITLE = '{TITLE}' ".format(TITLE=title))
@@ -241,13 +224,11 @@ def addBookToReadingList(libDir,title):
         return_status['msg'] = "Failed to add book to reading list. Book !Exist?"
         return return_status
 
-def sortLibrary(libDir,sortBy):
+def sortLibrary(libPath,sortBy):
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
@@ -259,14 +240,12 @@ def sortLibrary(libDir,sortBy):
     return_status['sortedList'] = sortedList
     return return_status
 
-def getBookId(libDir,title):
+def getBookId(libPath,title):
     #E.g.) dbFuncs.checkBookExists('/home/brandon/Documents/dev/Library/test.db','Harry Potter')
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
@@ -282,19 +261,17 @@ def getBookId(libDir,title):
         return_status['msg'] = 'Sorry Book not found'
         return return_status
 
-def addToRead(libDir, title):
+def addToRead(libPath, title):
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
         return return_status
     
-    bookExists = checkBookExists(libDir,title)['status']
+    bookExists = checkBookExists(libPath,title)['status']
     if bookExists:
         try:
             cur.execute("UPDATE BOOKS SET wantToRead = 'True' WHERE TITLE = '{TITLE}' ".format(TITLE=title))
@@ -311,13 +288,11 @@ def addToRead(libDir, title):
         return_status['msg'] = "Failed to add book to Want To Read list. Book !Exist?"
         return return_status
 
-def listToRead(libDir):
+def listToRead(libPath):
     return_status = {'status':True,'msg':""}
 
     try:
-        connection = makeConnection(libDir)
-        cur = connection[0]
-        con = connection[1]
+        con,cur = makeConnection(libPath)
     except sqlite3.Error as e:
         print(e)
         return_status['status'] = False
@@ -328,3 +303,14 @@ def listToRead(libDir):
     toReadList = [x[0] for x in bookListTuple]
     return_status['wantToReadList'] = toReadList
     return return_status
+
+def getBookmark(libPath,pageNumber):
+    return_status = {'status':True,'msg':""}
+
+    try:
+        con,cur = makeConnection(libPath)
+    except sqlite3.Error as e:
+        print(e)
+        return_status['status'] = False
+        return return_status
+
