@@ -46,19 +46,26 @@ class MainWindow(QMainWindow):
         menu.setNativeMenuBar(False)
         
         fileMenu = menu.addMenu('File')
-        fileMenu.addAction('New..')
+        fileMenu.addAction('New Library')
         fileMenu.addAction('Recent')
         fileMenu.addSeparator()
-        fileMenu.addAction('Import..')
-        fileMenu.addAction('Export..')
+        fileMenu.addAction('Import items')
+        fileMenu.addAction('Export items')
         fileMenu.addAction(self.openAct)
         fileMenu.addSeparator()
         fileMenu.addAction(self.exitAct)
         
         editMenu = menu.addMenu('Edit')
+        editMenu.addAction('Undo')
+        editMenu.addAction('Redo')
+        editMenu.addAction('Add Selected to Reading List')
+        editMenu.addAction('Delete Selected')
         editMenu.addAction('Preferences')
 
         viewMenu = menu.addMenu('View')
+        viewMenu.addAction('Hide Sidebar')
+        viewMenu.addAction('Increase List Size')
+        viewMenu.addAction('Decrease List Size')
         viewMenu.addAction('Go Fullscreen')
         
         aboutMenu = menu.addMenu('About')
@@ -79,7 +86,11 @@ class MainWindow(QMainWindow):
                 "<br>Its Authors are: Brandon Bryant, Caroline Fontenot, and Sai Spurthy")
 
 def launch():
-    app = QApplication(sys.argv)
+    app = None
+    if ( not QApplication.instance() ):
+        # create a new application
+        app = QApplication(sys.argv)
+
     window = MainWindow()
     window.setStatusBar("Welcome Back")
     window.showMaximized()

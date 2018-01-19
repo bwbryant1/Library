@@ -75,7 +75,8 @@ def load_library():
                 nameOfBook = input("What is the name of the book?: ")
                 while(not nameOfBook):
                     nameOfBook = input("Name of book cannot be blank! Try again: ")
-                dbFuncs.addBookToLibrary(libPath,nameOfBook)
+                print(dbFuncs.addBookToLibrary(libPath,nameOfBook)['msg'])
+                
             elif choice == '4':
                 clearTerm()
                 nameOfBook = input("What is the name of the book you would like to add to your reading list?: ")
@@ -126,7 +127,7 @@ def load_library():
                 print(
                     "1) Sort by Title \n"
                     "2) Sort by Author")
-                sortByNum = input("What would you like to sort by:")
+                sortByNum = input("What would you like to sort by: ")
                 if sortByNum == '1':
                     sortBy = 'title'
                 elif sortByNum == '2':
@@ -170,7 +171,8 @@ def load_library():
                         else:
                             print("input was not a number!")
                     elif choice == '2':
-                        dbFuncs.setBookmark(libPath,0)
+                        bookId = dbFuncs.getBookId(libPath, nameOfBook)['bookId']
+                        return_status = dbFuncs.addInfoToBook(libPath,'bookmark',nameOfBook,bookId,0)['msg']
                     else:
                         print("Input not valid.")
                 else:
