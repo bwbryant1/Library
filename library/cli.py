@@ -123,11 +123,20 @@ def load_library():
                     print(results['msg'])
             elif choice == '8':
                 clearTerm()
-                sortBy = 'title'
-                sortedList = dbFuncs.sortLibrary(libPath,sortBy)['sortedList']
+                print(
+                    "1) Sort by Title \n"
+                    "2) Sort by Author")
+                sortByNum = input("What would you like to sort by:")
+                if sortByNum == '1':
+                    sortBy = 'title'
+                elif sortByNum == '2':
+                    sortBy= 'author'
+                else:
+                    print("Sorry that's not a defined choice")
                 print("===== Sorted List=====")
-                for _book in sortedList:
-                    print(_book)
+                sortedListTuple = dbFuncs.sortLibrary(libPath,sortBy)['sortedListTuple']
+                for _book,_author in sortedListTuple:
+                    print("Title: "+ _book + "\n"+ "    By: "+ str(_author))
                 print("=====End of Sorted List=====")
             elif choice == '9':
                 clearTerm()
