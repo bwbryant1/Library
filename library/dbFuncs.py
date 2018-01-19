@@ -234,9 +234,13 @@ def sortLibrary(libPath,sortBy):
         return_status['status'] = False
         return return_status
 
-    cur.execute("SELECT TITLE FROM BOOKS GROUP BY {COLUMN} ORDER BY TITLE".format(COLUMN=sortBy))
+    cur.execute("SELECT TITLE, AUTHOR FROM BOOKS ORDER BY UPPER({COLUMN})".format(COLUMN=sortBy))
     sortedListTuple = cur.fetchall()
-    sortedList = [x[0] for x in sortedListTuple]
+    sortedList = [x for (x,y) in sortedListTuple]
+    columnList = [y for (x,y) in sortedListTuple]
+    return_status['sortedList'] = sortedList
+    return_status['columnList'] = columnList
+    return_status['sortedListTuple'] = sortedListTuple
     return_status['sortedList'] = sortedList
     return return_status
 
