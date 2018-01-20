@@ -77,6 +77,12 @@ def load_library():
                     nameOfBook = input("Name of book cannot be blank! Try again: ")
                 print(dbFuncs.addBookToLibrary(libPath,nameOfBook)['msg'])
                 
+            elif choice == '3':
+                clearTerm()
+                nameOfBook = input("What is the name of the book you want to delete?: ")
+                while(not nameOfBook):
+                    nameOfBook = input("Name of book cannot be blank! Try again: ")
+                print(dbFuncs.deleteBook(libPath,nameOfBook)['msg'])
             elif choice == '4':
                 clearTerm()
                 nameOfBook = input("What is the name of the book you would like to add to your reading list?: ")
@@ -193,34 +199,38 @@ def search_for_databases():
 def main():
     os.system("clear")
     print("Libraryman running. Welcome.\n")
-    while True:
-        print(
-            "Supported Functions are: \n"
-            " 1) Make a new Library \n"
-            " 2) Load a Library from file \n"
-            " 3) Get Library details \n"
-            " 4) Search for Databases \n"
-            "99) Exit \n")
+    try:
+        while True:
+            print(
+                "Supported Functions are: \n"
+                " 1) Make a new Library \n"
+                " 2) Load a Library from file \n"
+                " 3) Get Library details \n"
+                " 4) Search for Databases \n"
+                "99) Exit \n")
+    
+            choice = input("What would you like to do?: ")
+            if choice == '1':
+                print("Making Library")
+                new_library()
+            elif choice == '2':
+                print("Loading Library")
+                load_library()
+            elif choice == '3':
+                print("Getting library Details")
+                get_library_details()
+            elif choice == '4':
+                print("Searching for Databases")
+                search_for_databases()
+            elif choice == '99':
+                clearTerm()
+                print("Exiting now.")
+                sys.exit(0)
+            else:
+                print("I'm sorry I don't know that command.\n")
+    except KeyboardInterrupt:
+        print("\nBye!")
 
-        choice = input("What would you like to do?: ")
-        if choice == '1':
-            print("Making Library")
-            new_library()
-        elif choice == '2':
-            print("Loading Library")
-            load_library()
-        elif choice == '3':
-            print("Getting library Details")
-            get_library_details()
-        elif choice == '4':
-            print("Searching for Databases")
-            search_for_databases()
-        elif choice == '99':
-            clearTerm()
-            print("Exiting now.")
-            sys.exit(0)
-        else:
-            print("I'm sorry I don't know that command.\n")
 
 # wow very main
 if __name__ == "__main__":

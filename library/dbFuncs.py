@@ -6,11 +6,10 @@ def makeConnection(DATABASE_LOCATION):
     cur = con.cursor()
     return (con,cur)
 
-def addBookToLibrary(libPath,nameOf):
-    title = nameOf
+def addBookToLibrary(libPath,nameOfBook):
     return_status = {'status':True,'msg':""}
 
-    if not checkBookExists(libPath,title)['status']:
+    if not checkBookExists(libPath,nameOfBook)['status']:
         try:
             con,cur = makeConnection(libPath)
         except sqlite3.Error as e:
@@ -18,13 +17,38 @@ def addBookToLibrary(libPath,nameOf):
             return_status['status'] = False
             return_status['msg'] = "Could not make connection to that database"
             return return_status
-        cur.execute("INSERT INTO BOOKS ('title') VALUES ('{title}')".format(title=title))
+        cur.execute("INSERT INTO BOOKS ('TITLE') VALUES ('{TITLE}')".format(TITLE=nameOfBook))
         con.commit()
         con.close()
+        return_status['msg'] = "Book Added"
+        return return_status
     else:
         return_status['status'] = False
         return_status['msg'] = "Duplicate book name. Cant Add Book!"
         return return_status
+
+def deleteBook(libPath,nameOfBook):
+    return_status = {'status':True,'msg':""}
+
+    if checkBookExists(libPath,nameOfBook)['status']:
+            try:
+                con,cur = makeConnection(libPath)
+            except sqlite3.Error as e:
+                print(e)
+                return_status['status'] = False
+                return_status['msg'] = "Could not make connection to that database"
+                return return_status
+            bookId = getBookId(libPath,nameOfBook)['bookId']
+            cur.execute("DELETE FROM BOOKS WHERE ID = {ID}".format(ID=bookId))
+            con.commit()
+            con.close()
+            return_status['msg'] = "Book Deleted!"
+            return return_status
+    else:
+        return_status['status'] = False
+        return_status['msg'] = "No book found to delete!"
+        return return_status
+
 
 def addInfoToBook(libPath,column,title,bookId,info):
     # E.g.) dbFuncs.addInfoToBook('/home/brandon/Documents/dev/Library/test.db','genre','Harry Potter','kids')
