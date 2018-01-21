@@ -1,7 +1,8 @@
-import sys
+from . import dbFuncs
+import sys, os
 import pkg_resources
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, qApp, QHBoxLayout, QMainWindow, QAction, QMessageBox
+from PyQt5.QtWidgets import QApplication, qApp, QHBoxLayout, QMainWindow, QAction, QMessageBox, QFileDialog, QPushButton
 from PyQt5.QtGui import QIcon
 
 class MainWindow(QMainWindow):
@@ -23,14 +24,16 @@ class MainWindow(QMainWindow):
         return pkg_resources.resource_filename(self.resource_package, resource_path)
 
     def createActions(self):
-        
-        self.saveAct = QAction(QIcon(self.getFileResource('sync.svg','icon')),'&Open Library', self)
-        self.saveAct.setShortcut('Ctrl+s')
-        self.saveAct.setStatusTip('Save Library')
+
+        self.newAct = QAction(QIcon(self.getFileResource('sync.svg','icon')),'&New Library', self)
+        self.newAct.setShortcut('Ctrl+n')
+        self.newAct.setStatusTip('New Library')
+        self.newAct.triggered.connect(self.newDialog)
 
         self.openAct = QAction(QIcon(self.getFileResource('gear.svg','icon')),'&Open Library', self)
         self.openAct.setShortcut('Ctrl+o')
         self.openAct.setStatusTip('Open Library')
+        self.openAct.triggered.connect(self.openDialog)
 
         self.exitAct = QAction(QIcon(self.getFileResource('x.svg','icon')),'&Exit LibMan', self)
         self.exitAct.setShortcut('Ctrl+Q')
@@ -46,7 +49,7 @@ class MainWindow(QMainWindow):
         menu.setNativeMenuBar(False)
         
         fileMenu = menu.addMenu('File')
-        fileMenu.addAction('New Library')
+        fileMenu.addAction(self.newAct)
         fileMenu.addAction('Recent')
         fileMenu.addSeparator()
         fileMenu.addAction('Import items')
@@ -85,6 +88,28 @@ class MainWindow(QMainWindow):
                 "The <b>Library Manger</b> app was made for CYEN 481"
                 "<br>Its Authors are: Brandon Bryant, Caroline Fontenot, and Sai Spurthy")
 
+    def openDialog(self):
+        fileName = QFileDialog.getOpenFileName(self, 'Open file')
+        libPath = fileName[0]
+        msg = QMessageBox.information(self, 'Open Library', "Opening your library located at:" + libPath , QMessageBox.Ok | QMessageBox.Cancel)
+        if msg == QMessageBox.Ok:
+            self.listLibrary(libPath)
+        else:
+            print('Cancel clicked.')
+
+    def newDialog(self):
+        fileName, filter = QFileDialog.getSaveFileName(self, 'Save file', '', filter ="Allfiles (*)")
+        locationOf = os.getcwd()
+        nameOf = os.path.basename(fileName)
+        dbFuncs.makeNewLibrary(nameOf,locationOf)
+    
+    def listLibrary(self,libPath):
+        bookListTuple = dbFuncs.listBooksInLibrary(libPath)['bookListTuple']
+        listLen = len(bookListTuple)
+        #TESTING PURPOSE 
+        for _book,_bookmark in bookListTuple:
+            print("Title: "+ _book + " | Bookmark: "+ str(_bookmark))
+      
 def launch():
     app = None
     if ( not QApplication.instance() ):
