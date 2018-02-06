@@ -62,7 +62,6 @@ class TestDbFuncsItem(unittest.TestCase):
 
     def test_deleteBook(self):
         self.assertNotEqual(dbFuncs.deleteBook(self.testLibDir,self.realBook)['status'],True)
-        pass
 
     def test_checkLibraryNotExist(self):    
         self.assertNotEqual(os.path.isfile("./testFake.db") , True)
