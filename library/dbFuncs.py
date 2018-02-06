@@ -157,6 +157,7 @@ def makeNewLibrary(nameOf,locationOf):
         'format TEXT,'
         'isReading TEXT,'
         'wantToRead TEXT,'
+        'thumb BLOB,'
         'bookmark INTEGER'
         ')')
 

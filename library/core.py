@@ -3,6 +3,7 @@
 
 import sys
 from . import gui
+#from . import dbFuncs
 
 def main():
     gui.launch()
